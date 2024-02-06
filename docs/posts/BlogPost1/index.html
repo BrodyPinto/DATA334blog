@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brody Pinto">
-<meta name="dcterms.date" content="2024-01-31">
+<meta name="dcterms.date" content="2024-02-07">
 
-<title>DATA334blog - Post With Code - Test</title>
+<title>DATA334blog - Blog Post #1: US Tornado Data Exploration</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -142,9 +142,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code - Test</h1>
+      <h1 class="title">Blog Post #1: US Tornado Data Exploration</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
                 <div class="quarto-category">code</div>
                 <div class="quarto-category">analysis</div>
               </div>
@@ -164,7 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 31, 2024</p>
+        <p class="date">February 7, 2024</p>
       </div>
     </div>
     
@@ -183,14 +182,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> penguins, <span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm)) <span class="sc">+</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Untitled_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tornados <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tornados</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 68,693 × 27
+      om    yr    mo    dy date       time   tz        datetime_utc        st   
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;time&gt; &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;
+ 1   192  1950    10     1 1950-10-01 21:00  America/… 1950-10-02 03:00:00 OK   
+ 2   193  1950    10     9 1950-10-09 02:15  America/… 1950-10-09 08:15:00 NC   
+ 3   195  1950    11    20 1950-11-20 02:20  America/… 1950-11-20 08:20:00 KY   
+ 4   196  1950    11    20 1950-11-20 04:00  America/… 1950-11-20 10:00:00 KY   
+ 5   197  1950    11    20 1950-11-20 07:30  America/… 1950-11-20 13:30:00 MS   
+ 6   194  1950    11     4 1950-11-04 17:00  America/… 1950-11-04 23:00:00 PA   
+ 7   198  1950    12     2 1950-12-02 15:00  America/… 1950-12-02 21:00:00 IL   
+ 8   199  1950    12     2 1950-12-02 16:00  America/… 1950-12-02 22:00:00 IL   
+ 9   200  1950    12     2 1950-12-02 16:25  America/… 1950-12-02 22:25:00 AR   
+10   201  1950    12     2 1950-12-02 17:30  America/… 1950-12-02 23:30:00 IL   
+# ℹ 68,683 more rows
+# ℹ 18 more variables: stf &lt;dbl&gt;, mag &lt;dbl&gt;, inj &lt;dbl&gt;, fat &lt;dbl&gt;, loss &lt;dbl&gt;,
+#   slat &lt;dbl&gt;, slon &lt;dbl&gt;, elat &lt;dbl&gt;, elon &lt;dbl&gt;, len &lt;dbl&gt;, wid &lt;dbl&gt;,
+#   ns &lt;dbl&gt;, sn &lt;dbl&gt;, f1 &lt;dbl&gt;, f2 &lt;dbl&gt;, f3 &lt;dbl&gt;, f4 &lt;dbl&gt;, fc &lt;lgl&gt;</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This table only contains one segment per tornado, so we can drop the sg column.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tornados<span class="sc">$</span>sg <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

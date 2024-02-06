@@ -14,24 +14,17 @@
     "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   },
   {
-    "objectID": "posts/Blog Post #1/BlogPost#1.html",
-    "href": "posts/Blog Post #1/BlogPost#1.html",
+    "objectID": "posts/BlogPost1/index.html",
+    "href": "posts/BlogPost1/index.html",
     "title": "Blog Post #1: US Tornado Data Exploration",
     "section": "",
-    "text": "library(palmerpenguins)\nlibrary(tidyverse)\n\nggplot(data = penguins, aes(x = bill_length_mm)) +\n  geom_histogram(colour = \"black\", fill = \"white\")"
-  },
-  {
-    "objectID": "posts/Blog Post #1/Untitled.html",
-    "href": "posts/Blog Post #1/Untitled.html",
-    "title": "Post With Code - Test",
-    "section": "",
-    "text": "library(palmerpenguins)\nlibrary(tidyverse)\n\nggplot(data = penguins, aes(x = bill_length_mm)) +\n  geom_histogram(colour = \"black\", fill = \"white\")"
+    "text": "library(tidyverse)\nlibrary(here)\n\ntornados &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')\ntornados\n\n# A tibble: 68,693 × 27\n      om    yr    mo    dy date       time   tz        datetime_utc        st   \n   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;time&gt; &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;\n 1   192  1950    10     1 1950-10-01 21:00  America/… 1950-10-02 03:00:00 OK   \n 2   193  1950    10     9 1950-10-09 02:15  America/… 1950-10-09 08:15:00 NC   \n 3   195  1950    11    20 1950-11-20 02:20  America/… 1950-11-20 08:20:00 KY   \n 4   196  1950    11    20 1950-11-20 04:00  America/… 1950-11-20 10:00:00 KY   \n 5   197  1950    11    20 1950-11-20 07:30  America/… 1950-11-20 13:30:00 MS   \n 6   194  1950    11     4 1950-11-04 17:00  America/… 1950-11-04 23:00:00 PA   \n 7   198  1950    12     2 1950-12-02 15:00  America/… 1950-12-02 21:00:00 IL   \n 8   199  1950    12     2 1950-12-02 16:00  America/… 1950-12-02 22:00:00 IL   \n 9   200  1950    12     2 1950-12-02 16:25  America/… 1950-12-02 22:25:00 AR   \n10   201  1950    12     2 1950-12-02 17:30  America/… 1950-12-02 23:30:00 IL   \n# ℹ 68,683 more rows\n# ℹ 18 more variables: stf &lt;dbl&gt;, mag &lt;dbl&gt;, inj &lt;dbl&gt;, fat &lt;dbl&gt;, loss &lt;dbl&gt;,\n#   slat &lt;dbl&gt;, slon &lt;dbl&gt;, elat &lt;dbl&gt;, elon &lt;dbl&gt;, len &lt;dbl&gt;, wid &lt;dbl&gt;,\n#   ns &lt;dbl&gt;, sn &lt;dbl&gt;, f1 &lt;dbl&gt;, f2 &lt;dbl&gt;, f3 &lt;dbl&gt;, f4 &lt;dbl&gt;, fc &lt;lgl&gt;\n\n# This table only contains one segment per tornado, so we can drop the sg column.\ntornados$sg &lt;- NULL"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "DATA334blog",
     "section": "",
-    "text": "Blog Post #1: US Tornado Data Exploration\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nFeb 7, 2024\n\n\nBrody Pinto\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code - Test\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJan 31, 2024\n\n\nBrody Pinto\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJan 28, 2024\n\n\nBrody Pinto\n\n\n\n\n\n\nNo matching items"
+    "text": "Blog Post #1: US Tornado Data Exploration\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nFeb 7, 2024\n\n\nBrody Pinto\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJan 28, 2024\n\n\nBrody Pinto\n\n\n\n\n\n\nNo matching items"
   }
 ]
