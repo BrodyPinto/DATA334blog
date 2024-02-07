@@ -3,6 +3,7 @@ title: "Blog Post #1: US Tornado Data Exploration"
 author: "Brody Pinto"
 date: "2024-02-07"
 categories: [code, analysis]
+image: "total_tornados_map.png"
 ---
 
 ```{r}
@@ -96,12 +97,14 @@ state_tornados = left_join(state_abbrev, tornados_summary, by = c("state" = "st"
 table(state_tornados$state)
 
 
-ggplot(data = state_tornados,
+map_totaltornados = ggplot(data = state_tornados,
             mapping = aes(x = long, y = lat,
                           group = group)) +
   geom_polygon(colour = "black", aes(fill = total_tornados)) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
   theme_void()
+
+ggsave(here("posts/BlogPost1/total_tornados_map.png"), map_totaltornados)
 ```
 
 
