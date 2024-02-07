@@ -184,33 +184,126 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tornados <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv'</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tornados</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tornados <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tornados)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 68,693 × 27
-      om    yr    mo    dy date       time   tz        datetime_utc        st   
-   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;time&gt; &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;
- 1   192  1950    10     1 1950-10-01 21:00  America/… 1950-10-02 03:00:00 OK   
- 2   193  1950    10     9 1950-10-09 02:15  America/… 1950-10-09 08:15:00 NC   
- 3   195  1950    11    20 1950-11-20 02:20  America/… 1950-11-20 08:20:00 KY   
- 4   196  1950    11    20 1950-11-20 04:00  America/… 1950-11-20 10:00:00 KY   
- 5   197  1950    11    20 1950-11-20 07:30  America/… 1950-11-20 13:30:00 MS   
- 6   194  1950    11     4 1950-11-04 17:00  America/… 1950-11-04 23:00:00 PA   
- 7   198  1950    12     2 1950-12-02 15:00  America/… 1950-12-02 21:00:00 IL   
- 8   199  1950    12     2 1950-12-02 16:00  America/… 1950-12-02 22:00:00 IL   
- 9   200  1950    12     2 1950-12-02 16:25  America/… 1950-12-02 22:25:00 AR   
-10   201  1950    12     2 1950-12-02 17:30  America/… 1950-12-02 23:30:00 IL   
-# ℹ 68,683 more rows
-# ℹ 18 more variables: stf &lt;dbl&gt;, mag &lt;dbl&gt;, inj &lt;dbl&gt;, fat &lt;dbl&gt;, loss &lt;dbl&gt;,
-#   slat &lt;dbl&gt;, slon &lt;dbl&gt;, elat &lt;dbl&gt;, elon &lt;dbl&gt;, len &lt;dbl&gt;, wid &lt;dbl&gt;,
-#   ns &lt;dbl&gt;, sn &lt;dbl&gt;, f1 &lt;dbl&gt;, f2 &lt;dbl&gt;, f3 &lt;dbl&gt;, f4 &lt;dbl&gt;, fc &lt;lgl&gt;</code></pre>
+<pre><code># A tibble: 6 × 27
+     om    yr    mo    dy date       time  tz    datetime_utc        st      stf
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;tim&gt; &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt; &lt;dbl&gt;
+1   192  1950    10     1 1950-10-01 21:00 Amer… 1950-10-02 03:00:00 OK       40
+2   193  1950    10     9 1950-10-09 02:15 Amer… 1950-10-09 08:15:00 NC       37
+3   195  1950    11    20 1950-11-20 02:20 Amer… 1950-11-20 08:20:00 KY       21
+4   196  1950    11    20 1950-11-20 04:00 Amer… 1950-11-20 10:00:00 KY       21
+5   197  1950    11    20 1950-11-20 07:30 Amer… 1950-11-20 13:30:00 MS       28
+6   194  1950    11     4 1950-11-04 17:00 Amer… 1950-11-04 23:00:00 PA       42
+# ℹ 17 more variables: mag &lt;dbl&gt;, inj &lt;dbl&gt;, fat &lt;dbl&gt;, loss &lt;dbl&gt;, slat &lt;dbl&gt;,
+#   slon &lt;dbl&gt;, elat &lt;dbl&gt;, elon &lt;dbl&gt;, len &lt;dbl&gt;, wid &lt;dbl&gt;, ns &lt;dbl&gt;,
+#   sn &lt;dbl&gt;, f1 &lt;dbl&gt;, f2 &lt;dbl&gt;, f3 &lt;dbl&gt;, f4 &lt;dbl&gt;, fc &lt;lgl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This table only contains one segment per tornado, so we can drop the sg column.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tornados<span class="sc">$</span>sg <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tornados-data-set-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="tornados-data-set-introduction">Tornados Data Set Introduction</h2>
+<ul>
+<li>These data come from NOAA’s National Weather Service Storm Prediction Center. This data set consists of 27 different variables describing each observed tornado instance (68,693 total observations) in the United States from 1950 to 2022.</li>
+</ul>
+<p><strong>Variables of Interest</strong></p>
+<ul>
+<li>date <date></date></li>
+<li>st <chr>: two-letter abbreviation for the state</chr></li>
+<li>mag <dbl>: tornado magnitude on the F scale</dbl></li>
+<li></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>state_df <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">"state"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>state_abbrev <span class="ot">=</span> state_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">case_when</span>(region <span class="sc">==</span> <span class="st">"alabama"</span> <span class="sc">~</span> <span class="st">"AL"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"alaska"</span> <span class="sc">~</span> <span class="st">"AK"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"arizona"</span> <span class="sc">~</span> <span class="st">"AZ"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"arkansas"</span> <span class="sc">~</span> <span class="st">"AR"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"california"</span> <span class="sc">~</span> <span class="st">"CA"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"colorado"</span> <span class="sc">~</span> <span class="st">"CO"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"connecticut"</span> <span class="sc">~</span> <span class="st">"CT"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"delaware"</span> <span class="sc">~</span> <span class="st">"DE"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"florida"</span> <span class="sc">~</span> <span class="st">"FL"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"georgia"</span> <span class="sc">~</span> <span class="st">"GA"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"hawaii"</span> <span class="sc">~</span> <span class="st">"HI"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"idaho"</span> <span class="sc">~</span> <span class="st">"ID"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"illinois"</span> <span class="sc">~</span> <span class="st">"IL"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"indiana"</span> <span class="sc">~</span> <span class="st">"IN"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"iowa"</span> <span class="sc">~</span> <span class="st">"IA"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"kansas"</span> <span class="sc">~</span> <span class="st">"KS"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"kentucky"</span> <span class="sc">~</span> <span class="st">"KY"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"louisiana"</span> <span class="sc">~</span> <span class="st">"LA"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"maine"</span> <span class="sc">~</span> <span class="st">"ME"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"maryland"</span> <span class="sc">~</span> <span class="st">"MD"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"massachusetts"</span> <span class="sc">~</span> <span class="st">"MA"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"michigan"</span> <span class="sc">~</span> <span class="st">"MI"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"minnesota"</span> <span class="sc">~</span> <span class="st">"MN"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"mississippi"</span> <span class="sc">~</span> <span class="st">"MS"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"missouri"</span> <span class="sc">~</span> <span class="st">"MO"</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"montana"</span> <span class="sc">~</span> <span class="st">"MT"</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"nebraska"</span> <span class="sc">~</span> <span class="st">"NE"</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"nevada"</span> <span class="sc">~</span> <span class="st">"NV"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"new hampshire"</span> <span class="sc">~</span> <span class="st">"NH"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"new jersey"</span> <span class="sc">~</span> <span class="st">"NJ"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"new mexico"</span> <span class="sc">~</span> <span class="st">"NM"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"new york"</span> <span class="sc">~</span> <span class="st">"NY"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"north carolina"</span> <span class="sc">~</span> <span class="st">"NC"</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"north dakota"</span> <span class="sc">~</span> <span class="st">"ND"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"ohio"</span> <span class="sc">~</span> <span class="st">"OH"</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"oklahoma"</span> <span class="sc">~</span> <span class="st">"OK"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"oregon"</span> <span class="sc">~</span> <span class="st">"OR"</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"pennsylvania"</span> <span class="sc">~</span> <span class="st">"PA"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"rhode island"</span> <span class="sc">~</span> <span class="st">"RI"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"south carolina"</span> <span class="sc">~</span> <span class="st">"SC"</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"south dakota"</span> <span class="sc">~</span> <span class="st">"SD"</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"tennessee"</span> <span class="sc">~</span> <span class="st">"TN"</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"texas"</span> <span class="sc">~</span> <span class="st">"TX"</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"utah"</span> <span class="sc">~</span> <span class="st">"UT"</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"vermont"</span> <span class="sc">~</span> <span class="st">"VT"</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"virginia"</span> <span class="sc">~</span> <span class="st">"VA"</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"washington"</span> <span class="sc">~</span> <span class="st">"WA"</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"west virginia"</span> <span class="sc">~</span> <span class="st">"WV"</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"wisconsin"</span> <span class="sc">~</span> <span class="st">"WI"</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                                  region <span class="sc">==</span> <span class="st">"wyoming"</span> <span class="sc">~</span> <span class="st">"WY"</span>,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                                  <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_character_</span>))</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>tornados_summary <span class="ot">=</span> tornados <span class="sc">|&gt;</span> <span class="fu">group_by</span>(st) <span class="sc">|&gt;</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_tornados =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_magnitude =</span> <span class="fu">mean</span>(mag),</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_injuries =</span> <span class="fu">mean</span>(inj),</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_fatalities =</span> <span class="fu">mean</span>(fat),</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_property_loss =</span> <span class="fu">mean</span>(loss),</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_length =</span> <span class="fu">mean</span>(len),</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_width =</span> <span class="fu">mean</span>(wid))</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>state_tornados <span class="ot">=</span> <span class="fu">left_join</span>(state_abbrev, tornados_summary, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"state"</span> <span class="ot">=</span> <span class="st">"st"</span>))</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(state_tornados<span class="sc">$</span>state)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  AL   AR   AZ   CA   CO   CT   DE   FL   GA   IA   ID   IL   IN   KS   KY   LA 
+ 202  312  149  516   79   91   94  872  381  256  233  329  257  113  397  650 
+  MA   MD   ME   MI   MN   MO   MS   MT   NC   ND   NE   NH   NJ   NM   NV   NY 
+ 286  566  399  830  373  315  382  238  782  105  208  125  205   78   70  495 
+  OH   OK   OR   PA   RI   SC   SD   TN   TX   UT   VA   VT   WA   WI   WV   WY 
+ 238  284  236  172   66  304  166  289 1088   59  734  129  545  388  373   68 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> state_tornados,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">group =</span> group)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> total_tornados)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>(<span class="at">projection =</span> <span class="st">"albers"</span>, <span class="at">lat0 =</span> <span class="dv">39</span>, <span class="at">lat1 =</span> <span class="dv">45</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

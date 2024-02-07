@@ -9,13 +9,102 @@ categories: [code, analysis]
 #| warning: false
 library(tidyverse)
 library(here)
+library(maps)
 
 tornados <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
-tornados
-
-# This table only contains one segment per tornado, so we can drop the sg column.
-tornados$sg <- NULL
-
+head(tornados)
 ```
+
+## Tornados Data Set Introduction
+
+ - These data come from NOAA's National Weather Service Storm Prediction Center. This data set consists of 27 different variables describing each observed tornado instance (68,693 total observations) in the United States from 1950 to 2022.
+
+**Variables of Interest**
+
+ - date <date>
+ - st <chr>: two-letter abbreviation for the state
+ - mag <dbl>: tornado magnitude on the F scale
+ - 
+
+
+```{r}
+state_df <- map_data("state")
+
+state_abbrev = state_df |> mutate(state = case_when(region == "alabama" ~ "AL",
+                                  region == "alaska" ~ "AK",
+                                  region == "arizona" ~ "AZ",
+                                  region == "arkansas" ~ "AR",
+                                  region == "california" ~ "CA",
+                                  region == "colorado" ~ "CO",
+                                  region == "connecticut" ~ "CT",
+                                  region == "delaware" ~ "DE",
+                                  region == "florida" ~ "FL",
+                                  region == "georgia" ~ "GA",
+                                  region == "hawaii" ~ "HI",
+                                  region == "idaho" ~ "ID",
+                                  region == "illinois" ~ "IL",
+                                  region == "indiana" ~ "IN",
+                                  region == "iowa" ~ "IA",
+                                  region == "kansas" ~ "KS",
+                                  region == "kentucky" ~ "KY",
+                                  region == "louisiana" ~ "LA",
+                                  region == "maine" ~ "ME",
+                                  region == "maryland" ~ "MD",
+                                  region == "massachusetts" ~ "MA",
+                                  region == "michigan" ~ "MI",
+                                  region == "minnesota" ~ "MN",
+                                  region == "mississippi" ~ "MS",
+                                  region == "missouri" ~ "MO",
+                                  region == "montana" ~ "MT",
+                                  region == "nebraska" ~ "NE",
+                                  region == "nevada" ~ "NV",
+                                  region == "new hampshire" ~ "NH",
+                                  region == "new jersey" ~ "NJ",
+                                  region == "new mexico" ~ "NM",
+                                  region == "new york" ~ "NY",
+                                  region == "north carolina" ~ "NC",
+                                  region == "north dakota" ~ "ND",
+                                  region == "ohio" ~ "OH",
+                                  region == "oklahoma" ~ "OK",
+                                  region == "oregon" ~ "OR",
+                                  region == "pennsylvania" ~ "PA",
+                                  region == "rhode island" ~ "RI",
+                                  region == "south carolina" ~ "SC",
+                                  region == "south dakota" ~ "SD",
+                                  region == "tennessee" ~ "TN",
+                                  region == "texas" ~ "TX",
+                                  region == "utah" ~ "UT",
+                                  region == "vermont" ~ "VT",
+                                  region == "virginia" ~ "VA",
+                                  region == "washington" ~ "WA",
+                                  region == "west virginia" ~ "WV",
+                                  region == "wisconsin" ~ "WI",
+                                  region == "wyoming" ~ "WY",
+                                  TRUE ~ NA_character_))
+
+tornados_summary = tornados |> group_by(st) |>
+  summarise(total_tornados = n(),
+            mean_magnitude = mean(mag),
+            mean_injuries = mean(inj),
+            mean_fatalities = mean(fat),
+            mean_property_loss = mean(loss),
+            mean_length = mean(len),
+            mean_width = mean(wid))
+
+state_tornados = left_join(state_abbrev, tornados_summary, by = c("state" = "st"))
+
+table(state_tornados$state)
+
+
+ggplot(data = state_tornados,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(colour = "black", aes(fill = total_tornados)) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  theme_void()
+```
+
+
+
 
 
