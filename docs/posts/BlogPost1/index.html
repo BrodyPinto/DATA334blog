@@ -319,7 +319,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mag =</span> <span class="fu">as_factor</span>(mag))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> tornadoes_mag_sum, <span class="fu">aes</span>(<span class="at">x =</span> yr, <span class="at">y =</span> tornado_occurrences, <span class="at">col =</span> mag)) <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Severe Tornado Occurences"</span>) <span class="sc">+</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -366,6 +366,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong>Visual Takeaway:</strong> The most tornadoes occur during the start of summer - particularly April, May, and June. These three months seem significantly higher than the rest, which makes sense due to the typical atmospheric conditions that exist during this time. The introduction of more warm, moist air, combined with cooler, dry air causes instability in the lower atmosphere. The dryness of the winter months lead to lower instances of tornadoes in the United States.</p>
+<p><br></p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In particular for the map of total tornadoes, I could standardize the values with respect to tornadoes per state land area so that the massive area of Texas doesn’t stand out as much in the visualization. If I did it this way, I would likely see a change in colors in the map with likely higher values in states like Oklahoma and Kansas. In terms of the line plot for extreme tornadoes over time, the plot is a bit underwhelming. This is likely because of the lack of striking trend that we see in the other two figures.</p>
+<p>If I had more time to work with these data, I would try to explore relationships involving tornado size (length and width) and magnitude with property losses and injuries/fatalities. I think it would be interesting to see if I could make a model that predicts either property loss or injuries/fatalities using tornado size and magnitude as well as time of day. The <code>datetime_utc</code> variable could also be used to view the data as a time series.</p>
 <p><br></p>
 </section>
 <section id="connection-to-class-ideas" class="level2">
