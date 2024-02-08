@@ -1,32 +1,41 @@
 ---
 title: "Blog Post #1: US Tornado Data Exploration"
 author: "Brody Pinto"
-date: "2024-02-07"
+date: "2024-02-09"
 categories: [code, analysis]
-image: "total_tornados_map.png"
+image: "total_tornadoes_map.png"
 ---
+
+## Tornadoes Data Set Introduction
+
+ - These data come from NOAA's National Weather Service Storm Prediction Center. This data set consists of 27 different variables describing each observed tornado instance (68,693 total observations) in the United States from 1950 to 2022. I found this data set from tidytuesday on GitHub from the following URL: <a href = "https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-05-16/readme.md">https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-05-16/readme.md</a>.
+ 
+**Questions of Interest**
+
+ - How do total tornado occurrences vary within the United States - which state has seen the most hurricanes over the last 72 years?
+ - How has the occurrence of extreme tornadoes (>3F) changed over the last 72 years?
+ - In which months are tornadoes most common?
+
+**Variables of Interest**
+
+ - yr: year of tornado occurrence
+ - mo: month of tornado occurrence
+ - st: two-letter abbreviation for the state
+ - mag: tornado magnitude on the Fujita Scale (0F-5F)
+ 
 
 ```{r}
 #| warning: false
 library(tidyverse)
 library(here)
 library(maps)
+library(RColorBrewer)
 
-tornados <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
-head(tornados)
+tornadoes <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
+head(tornadoes)
 ```
 
-## Tornados Data Set Introduction
-
- - These data come from NOAA's National Weather Service Storm Prediction Center. This data set consists of 27 different variables describing each observed tornado instance (68,693 total observations) in the United States from 1950 to 2022.
-
-**Variables of Interest**
-
- - date <date>
- - st <chr>: two-letter abbreviation for the state
- - mag <dbl>: tornado magnitude on the F scale
- - 
-
+## How do total tornado occurrances vary within the United States - which state has seen the most hurricanes over the past 72 years?
 
 ```{r}
 state_df <- map_data("state")
@@ -83,8 +92,8 @@ state_abbrev = state_df |> mutate(state = case_when(region == "alabama" ~ "AL",
                                   region == "wyoming" ~ "WY",
                                   TRUE ~ NA_character_))
 
-tornados_summary = tornados |> group_by(st) |>
-  summarise(total_tornados = n(),
+tornadoes_summary = tornadoes |> group_by(st) |>
+  summarise(total_tornadoes = n(),
             mean_magnitude = mean(mag),
             mean_injuries = mean(inj),
             mean_fatalities = mean(fat),
@@ -92,22 +101,87 @@ tornados_summary = tornados |> group_by(st) |>
             mean_length = mean(len),
             mean_width = mean(wid))
 
-state_tornados = left_join(state_abbrev, tornados_summary, by = c("state" = "st"))
+state_tornadoes = left_join(state_abbrev, tornadoes_summary, by = c("state" = "st"))
 
-table(state_tornados$state)
-
-
-map_totaltornados = ggplot(data = state_tornados,
+map_totaltornadoes = ggplot(data = state_tornadoes,
             mapping = aes(x = long, y = lat,
                           group = group)) +
-  geom_polygon(colour = "black", aes(fill = total_tornados)) +
+  geom_polygon(colour = "black", aes(fill = total_tornadoes)) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
-  theme_void()
+  theme_void() +
+  scale_fill_viridis_c()
 
-ggsave(here("posts/BlogPost1/total_tornados_map.png"), map_totaltornados)
+map_totaltornadoes
 ```
 
+```{r}
+#| output: false
+ggsave(here("posts/BlogPost1/total_tornadoes_map.png"), map_totaltornadoes)
+```
 
+**Visual Takeaways:** This is a map of the United States, colored by total tornado instances over the past 72 years. Texas stands out as having a significantly higher number of tornadoes than the rest of the country. This may be surprising, as one might expect either Kansas or Oklahoma to take the top spot (while those two states appear to be coming in the second and third most tornadoes). One possible explanation is that Texas is significantly larger in terms of pure land area. One visible trend is "tornado alley" through the center of the United States from Texas through South Dakota (including eastern Colorado). Florida is also an interesting case, having a similar number of tornadoes to states in tornado valley. This makes sense because tornadoes often occur during other severe storm events such as thunderstorms, tropical storms, and hurricanes.
 
+<br>
+
+## How has the occurrence of extreme tornadoes (>3F) changed over the last 72 years?
+
+```{r}
+#| warning: false
+tornadoes_mag_sum = tornadoes |> filter(mag > 2) |>
+  group_by(yr,mag) |>
+  summarise(tornado_occurrences = n()) |>
+  mutate(mag = as_factor(mag))
+
+ggplot(data = tornadoes_mag_sum, aes(x = yr, y = tornado_occurrences, col = mag)) +
+  geom_line() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Year", y = "Severe Tornado Occurences") +
+  theme_minimal()
+```
+
+**Visual Takeaways:** There doesn't appear to be any strong trend in extreme tornadoes in the United States. The trend for severe (3F: 158-206 mph), devastating (4F: 207-260 mph), and incredible (5F: 261-318 mph) tornadoes seems to be random and relatively unpredictable. With increasing instability in the environment due to global climate change, I expected to see an increase in more intense tornadoes from 1950 to 2022. For severe hurricanes, however, there has been a slight overall decrease in occurrences over time.
+
+<br>
+
+## In which months are tornadoes most common?
+
+```{r}
+month_tornado = tornadoes |>
+  group_by(mo) |>
+  summarise(Month_totals = n()) |>
+  mutate(Month = case_when(mo == 1 ~ "Jan",
+                           mo == 2 ~ "Feb",
+                           mo == 3 ~ "Mar",
+                           mo == 4 ~ "Apr",
+                           mo == 5 ~ "May",
+                           mo == 6 ~ "Jun",
+                           mo == 7 ~ "Jul",
+                           mo == 8 ~ "Aug",
+                           mo == 9 ~ "Sep",
+                           mo == 10 ~ "Oct",
+                           mo == 11 ~ "Nov",
+                           mo == 12 ~ "Dec")) |>
+  mutate(Month = as.factor(x = Month),
+         Month = fct_reorder(Month, mo))
+
+top_3 = month_tornado |>
+  filter(Month %in% c("Apr", "May", "Jun"))
+
+ggplot(data = month_tornado, aes(x = Month, y = Month_totals)) +
+  geom_segment(aes(xend = Month, y = 0, yend = Month_totals)) +
+  geom_point() +
+  geom_segment(data = top_3, aes(xend = Month, y = 0, yend = Month_totals), col = "darkred", linewidth = 2) +
+  geom_point(data = top_3, col = "darkred", size = 3) +
+  labs(y = "Tornado Occurrences") +
+  theme_minimal()
+```
+
+**Visual Takeaway:** The most tornadoes occur during the start of summer - particularly April, May, and June. These three months seem significantly higher than the rest, which makes sense due to the typical atmospheric conditions that exist during this time. The introduction of more warm, moist air, combined with cooler, dry air causes instability in the lower atmosphere. The dryness of the winter months lead to lower instances of tornadoes in the United States.
+
+<br>
+
+## Connection to Class Ideas
+
+These visuals effectively communicate information about tornado data in the United States by incorporating color, cleanliness, and organization to appeal to the reader's visual senses. In terms of human perception, changes in color are much easier to distinguish than changes in shape, so I made sure to use color that grabs the reader's attention whenever applicable. For the map of the United States, I used a sequential, continuous color scale to represent the total number of tornado occurrences per state. This color scale is ideal for representing this type of data because it allows for a quick, effective interpretation of the intended results. Finally, I tried to maximize data-to-ink ratio as much as possible to ensure the reader's attention was in the right place and not distracted by any superfluous detail.
 
 
