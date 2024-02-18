@@ -109,7 +109,7 @@ map_totaltornadoes = ggplot(data = state_tornadoes,
   geom_polygon(colour = "black", aes(fill = total_tornadoes)) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
   theme_void() +
-  scale_fill_viridis_c()
+  scale_fill_distiller(palette = "Reds", direction = 0.5)
 
 map_totaltornadoes
 ```
@@ -119,7 +119,7 @@ map_totaltornadoes
 ggsave(here("posts/BlogPost1/total_tornadoes_map.png"), map_totaltornadoes)
 ```
 
-**Visual Takeaways:** This is a map of the United States, colored by total tornado instances over the past 72 years. Texas stands out as having a significantly higher number of tornadoes than the rest of the country. This may be surprising, as one might expect either Kansas or Oklahoma to take the top spot (while those two states appear to be coming in the second and third most tornadoes). One possible explanation is that Texas is significantly larger in terms of pure land area. One visible trend is "tornado alley" through the center of the United States from Texas through South Dakota (including eastern Colorado). Florida is also an interesting case, having a similar number of tornadoes to states in tornado valley. This makes sense because tornadoes often occur during other severe storm events such as thunderstorms, tropical storms, and hurricanes.
+**Visual Takeaways:** This is a map of the United States, colored by total tornado instances over the past 72 years. Texas stands out as having a significantly higher number of tornadoes than the rest of the country. This may be surprising, as one might expect either Kansas or Oklahoma to take the top spot (while those two states appear to be coming in the second and third most tornadoes). One possible explanation is that Texas is significantly larger in terms of pure land area. One visible trend is "tornado alley" through the center of the United States from Texas through South Dakota (including eastern Colorado). Florida is also an interesting case, having a similar number of tornadoes to states in tornado alley. This makes sense because tornadoes often occur during other severe storm events such as thunderstorms, tropical storms, and hurricanes.
 
 <br>
 
