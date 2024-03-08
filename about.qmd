@@ -9,11 +9,11 @@ about:
       href: https://twitter.com
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://linkedin.com/in/brodypinto/
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/BrodyPinto/DATA334blog
 
 ---
 
-About this blog
+Hi, my name is Brody Pinto, and I'm a student at St. Lawrence University majoring in Data Science and Biology. This is my Data Visualization (DATA334) Blog where I will explore several different data sets and try to tell a visual data story with each. The goal of these blog posts is to create background for the data, minimize clutter to focus the reader's attention on just a few important aspects of the data, and tell a story in a way that is engaging, intuitive, and insightful.
