@@ -186,9 +186,7 @@ In particular for the map of total tornadoes, I could standardize the values wit
 
 If I had more time to work with these data, I would try to explore relationships involving tornado size (length and width) and magnitude with property losses and injuries/fatalities. I think it would be interesting to see if I could make a model that predicts either property loss or injuries/fatalities using tornado size and magnitude as well as time of day. The `datetime_utc` variable could also be used to view the data as a time series.
 
-<br>
-
-## Connection to Class Ideas
+**Connection to Class Ideas**
 
 These visuals effectively communicate information about tornado data in the United States by incorporating color, cleanliness, and organization to appeal to the reader's visual senses. In terms of human perception, changes in color are much easier to distinguish than changes in shape, so I made sure to use color that grabs the reader's attention whenever applicable. For the map of the United States, I used a sequential, continuous color scale to represent the total number of tornado occurrences per state. This color scale is ideal for representing this type of data because it allows for a quick, effective interpretation of the intended results. Finally, I tried to maximize data-to-ink ratio as much as possible to ensure the reader's attention was in the right place and not distracted by any superfluous detail.
 

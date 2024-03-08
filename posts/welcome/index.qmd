@@ -1,12 +1,18 @@
 ---
-title: "Welcome To My Blog"
+title: "Data Visualization Blog - Brody Pinto"
 author: "Brody Pinto"
-date: "2024-01-28"
+date: "2024-03-08"
 categories: [news]
+image: "storytelling-data-visualizations-header.webp"
 ---
 
-This is the first post in a Quarto blog. Welcome!
+This is my Data Visualization Blog. Here, I will explore a few different data sets and attempt to tell a story for each of them. My goal is to follow the processes involved with "data storytelling": 
 
-![](thumbnail.jpg)
+ - understand and explain the context of the data
+ - choose effective visuals
+ - eliminate clutter
+ - focus attention on a particular trend(s) in the data
+ - tell a story!
 
-Since this post doesn't specify an explicit `image`, the first image in the post will be used in the listing page of posts.
+![](storytelling-data-visualizations-header.webp)
+

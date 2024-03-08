@@ -3,6 +3,7 @@ title: "Blog Post #2: Big Tech Stock Prices"
 author: "Brody Pinto"
 date: "2024-02-23"
 categories: [code, analysis]
+image: "apple_stockprice.png"
 ---
 
 ## Big Tech Stock Prices Data Set Introduction
@@ -33,6 +34,7 @@ library(forecast)
 library(openintro)
 library(broom)
 library(modelr)
+library(here)
 theme_set(theme_minimal())
 
 tuesdata <- tidytuesdayR::tt_load('2023-02-07')
@@ -118,7 +120,7 @@ grid <- apple_stocks |>
 aug_apple <- augment(mod_apple, newdata = grid,
                    interval = "confidence")
 
-ggplot(data = apple_stocks, aes(x = date, y = high)) +
+apple_stockprice = ggplot(data = apple_stocks, aes(x = date, y = high)) +
   geom_line() +
   geom_line(data = aug_apple, aes(x = date, y = .fitted),
             colour = "blue", linewidth = 1.2) +
@@ -128,7 +130,14 @@ ggplot(data = apple_stocks, aes(x = date, y = high)) +
               alpha = 0.4) +
   labs(x = "Date", y = "Stock Price ($)")
 
+apple_stockprice
+
 glance(mod_apple)
+```
+
+```{r}
+#| output: false
+ggsave(here("posts/BlogPost2/apple_stockprice.png"), apple_stockprice)
 ```
 
 **Visual Takeaways:** The black curve is the observed stock prices for Apple.com and the blue curve is the the model used to predict Apple stock prices. Although it's hard to see, there is also a shaded region around the blue curve that represents the 95% confidence interval for the model's fitted values. The model seems to fit the actual trend in Apple stock price decently well ($R^2 = 0.978$).
