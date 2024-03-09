@@ -22,7 +22,7 @@ These bee colony data come from the United States Department of Agriculture (USD
  - year
  - state
  - colony_n: number of bee colonies
- - colony_reno_pct: percent of total colonies renovated
+ - colony_reno_pct: percent of total colonies renovated (either by re-queening or nucleus colony)
  - colony_lost_pct: percent of total colonies lost
 
 ```{r}
@@ -61,7 +61,7 @@ ggplot(data = top5_total, aes(x = state, y = average_colonies)) +
   labs(x = "State", y = "Average Total Bee Colonies", caption = "*Error bars are one standard error from the mean.")
 ```
 
-**Visual Takeaways:** This plot shows the five states that are the most populous in bee colonies in 2020. California clearly has the most bee colonies for that year, also with the most variance from summer to winter months. I also want to point out that Georgia and Florida have relatively variance throughout the year; this makes sense because their seasonal turnover is much less harsh than North Dakota and California.
+**Visual Takeaways:** This plot shows the five states that are the most populous in bee colonies in 2020. California clearly has the most bee colonies for that year, also with the most variance from summer to winter months. I also want to point out that Georgia and Florida have relatively low variance throughout the year; this makes sense because their seasonal turnover is much less harsh than North Dakota and California.
 
 <br>
 
@@ -103,6 +103,7 @@ state_df <- map_data("state")
 state_bees = colony |>
   mutate(state = tolower(state)) |>
   filter(year == 2015 | year == 2020) |>
+  filter(!is.na(colony_lost_pct)) |>
   group_by(state, year) |>
   summarise(average_colonies_lost = mean(colony_lost_pct)) |>
   mutate(year = as_factor(year)) |>
@@ -114,20 +115,22 @@ ggplot(data = state_bees,
   geom_polygon(colour = "black", aes(fill = average_colonies_lost)) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
   theme_void() +
-  scale_fill_distiller(palette = "Reds", direction = 0.5) +
+  scale_fill_viridis_c(direction = -1) +
   facet_wrap(~year) +
   labs(fill = "Average Colonies Lost (%)")
 ```
 
 **Visual Takeaways:** There appears to be an overall trend of improvement when it comes to average bee colonies lost, particularly across the eastern United States. The one state that doesn't follow this general trend is Alabama where its average percent of colonies lost went from around 15% in 2015 to over 20% in 2020. On the other hand, the top five states from the first plot above (California, Florida, North Dakota, Texas, and Georgia) all saw a decrease in average bee colonies lost between 2015 and 2020.
 
+**Note:** This data set does not include bee colony data for the state of Nevada.
+
 <br>
 
 ## Conclusion
 
-This data set was particularly interesting to look at because I know that across the world, natural pollinators are on the decline on the global scale as a result of a loss of habitat with the ever-growing urbanization in our world. This problem poses a concerning issue since we rely on natural pollinators, like bees, to pollinate our crops we use to feed ourselves and our animals. I found it somewhat surprising that in the United States in particular, there are efforts to renovate and support our bee populations. The final graph actually leaves us with a bit of hope that there does seem to be a positive trend of improvement when it comes to bee colony losses.
+This data set was particularly interesting to look at because I know that across the world, natural pollinators are on the decline on the global scale as a result of a loss of habitat with the ever-growing urbanization in our world. Bees also continue to be threatened by the invasive varroa mite and other diseases. This problem poses a concerning issue since we rely on natural pollinators, like bees, to pollinate our crops we use to feed ourselves and our animals. I found it somewhat surprising that in the United States in particular, there are efforts to renovate and support our bee populations. The final graph actually leaves us with a bit of hope that there does seem to be a positive trend of improvement when it comes to bee colony losses.
 
-There may be a some flaws to my approach in analyzing these data. I could have taken a different approach by looking at time series plots of bee colony numbers, renovation projects, and changes in colony losses over time. I am happy, however with the ways in which I presented the data. If I had more data (i.e. daily data), it would have been easier to construct a time series of the changes in bee colonies over time and try to make a predictive model for those changes.
+There may be some flaws to my approach in analyzing these data. I could have taken a different approach by looking at time series plots of bee colony numbers, renovation projects, and changes in colony losses over time. I am happy, however with the ways in which I presented the data. If I had more data (i.e. daily data), it would have been easier to construct a time series of the changes in bee colonies over time and try to make a predictive model for those changes.
 
 **Connections to Class Ideas**
 
