@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>year</li>
 <li>state</li>
 <li>colony_n: number of bee colonies</li>
-<li>colony_reno_pct: percent of total colonies renovated</li>
+<li>colony_reno_pct: percent of total colonies renovated (either by re-queening or nucleus colony)</li>
 <li>colony_lost_pct: percent of total colonies lost</li>
 </ul>
 <div class="cell">
@@ -236,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><strong>Visual Takeaways:</strong> This plot shows the five states that are the most populous in bee colonies in 2020. California clearly has the most bee colonies for that year, also with the most variance from summer to winter months. I also want to point out that Georgia and Florida have relatively variance throughout the year; this makes sense because their seasonal turnover is much less harsh than North Dakota and California.</p>
+<p><strong>Visual Takeaways:</strong> This plot shows the five states that are the most populous in bee colonies in 2020. California clearly has the most bee colonies for that year, also with the most variance from summer to winter months. I also want to point out that Georgia and Florida have relatively low variance throughout the year; this makes sense because their seasonal turnover is much less harsh than North Dakota and California.</p>
 <p><br></p>
 </section>
 <section id="how-have-the-top-three-states-been-at-renovating-bee-colonies-from-2015-to-2020-both-in-summer-and-winter-months" class="level2">
@@ -278,31 +278,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>state_bees <span class="ot">=</span> colony <span class="sc">|&gt;</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">tolower</span>(state)) <span class="sc">|&gt;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2015</span> <span class="sc">|</span> year <span class="sc">==</span> <span class="dv">2020</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, year) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">average_colonies_lost =</span> <span class="fu">mean</span>(colony_lost_pct)) <span class="sc">|&gt;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as_factor</span>(year)) <span class="sc">|&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(state_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"state"</span> <span class="ot">=</span> <span class="st">"region"</span>), <span class="at">relationship =</span> <span class="st">"many-to-many"</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> state_bees,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">group =</span> group)) <span class="sc">+</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> average_colonies_lost)) <span class="sc">+</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>(<span class="at">projection =</span> <span class="st">"albers"</span>, <span class="at">lat0 =</span> <span class="dv">39</span>, <span class="at">lat1 =</span> <span class="dv">45</span>) <span class="sc">+</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"Reds"</span>, <span class="at">direction =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Average Colonies Lost (%)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(colony_lost_pct)) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, year) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">average_colonies_lost =</span> <span class="fu">mean</span>(colony_lost_pct)) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as_factor</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(state_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"state"</span> <span class="ot">=</span> <span class="st">"region"</span>), <span class="at">relationship =</span> <span class="st">"many-to-many"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> state_bees,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">group =</span> group)) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> average_colonies_lost)) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>(<span class="at">projection =</span> <span class="st">"albers"</span>, <span class="at">lat0 =</span> <span class="dv">39</span>, <span class="at">lat1 =</span> <span class="dv">45</span>) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Average Colonies Lost (%)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>Visual Takeaways:</strong> There appears to be an overall trend of improvement when it comes to average bee colonies lost, particularly across the eastern United States. The one state that doesn’t follow this general trend is Alabama where its average percent of colonies lost went from around 15% in 2015 to over 20% in 2020. On the other hand, the top five states from the first plot above (California, Florida, North Dakota, Texas, and Georgia) all saw a decrease in average bee colonies lost between 2015 and 2020.</p>
+<p><strong>Note:</strong> This data set does not include bee colony data for the state of Nevada.</p>
 <p><br></p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This data set was particularly interesting to look at because I know that across the world, natural pollinators are on the decline on the global scale as a result of a loss of habitat with the ever-growing urbanization in our world. This problem poses a concerning issue since we rely on natural pollinators, like bees, to pollinate our crops we use to feed ourselves and our animals. I found it somewhat surprising that in the United States in particular, there are efforts to renovate and support our bee populations. The final graph actually leaves us with a bit of hope that there does seem to be a positive trend of improvement when it comes to bee colony losses.</p>
-<p>There may be a some flaws to my approach in analyzing these data. I could have taken a different approach by looking at time series plots of bee colony numbers, renovation projects, and changes in colony losses over time. I am happy, however with the ways in which I presented the data. If I had more data (i.e.&nbsp;daily data), it would have been easier to construct a time series of the changes in bee colonies over time and try to make a predictive model for those changes.</p>
+<p>This data set was particularly interesting to look at because I know that across the world, natural pollinators are on the decline on the global scale as a result of a loss of habitat with the ever-growing urbanization in our world. Bees also continue to be threatened by the invasive varroa mite and other diseases. This problem poses a concerning issue since we rely on natural pollinators, like bees, to pollinate our crops we use to feed ourselves and our animals. I found it somewhat surprising that in the United States in particular, there are efforts to renovate and support our bee populations. The final graph actually leaves us with a bit of hope that there does seem to be a positive trend of improvement when it comes to bee colony losses.</p>
+<p>There may be some flaws to my approach in analyzing these data. I could have taken a different approach by looking at time series plots of bee colony numbers, renovation projects, and changes in colony losses over time. I am happy, however with the ways in which I presented the data. If I had more data (i.e.&nbsp;daily data), it would have been easier to construct a time series of the changes in bee colonies over time and try to make a predictive model for those changes.</p>
 <p><strong>Connections to Class Ideas</strong></p>
 <ul>
 <li>These visuals are an effective way of communicating a story about bee colonies over space and time: I focused in on 5 of the states with the highest number of colonies and tried to share my findings in a way that is insightful.</li>
