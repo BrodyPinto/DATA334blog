@@ -30,6 +30,7 @@ These bee colony data come from the United States Department of Agriculture (USD
 library(tidyverse)
 library(maps)
 library(here)
+library(plotly)
 
 theme_set(theme_minimal())
 
@@ -77,13 +78,13 @@ top3_yearly = colony |> filter(state %in% c("California", "Florida", "North Dako
          lower_reno = average_renovation_pct - se_reno,
          upper_reno = average_renovation_pct + se_reno)
 
-average_renovation_graph = ggplot(data = top3_yearly, aes(x = factor(year), 
+average_renovation_graph = ggplot(data = top3_yearly, aes(x = year, 
                                                           y = average_renovation_pct, 
-                                                          fill = state)) +
-  geom_col(position = "dodge", color = "black") +
+                                                          col = state)) +
+  geom_line(linewidth = 1, alpha = 0.7) +
   facet_wrap(~season) +
-  scale_fill_viridis_d() +
-  labs(x = "Year", y = "Average Renovation Percentage", fill = "State")
+  scale_color_viridis_d() +
+  labs(x = "Year", y = "Average Renovation Percentage", color = "State")
 average_renovation_graph
 ```
 
@@ -109,15 +110,19 @@ state_bees = colony |>
   mutate(year = as_factor(year)) |>
   left_join(state_df, by = c("state" = "region"), relationship = "many-to-many")
 
-ggplot(data = state_bees,
+mapplot = ggplot(data = state_bees,
             mapping = aes(x = long, y = lat,
                           group = group)) +
-  geom_polygon(colour = "black", aes(fill = average_colonies_lost)) +
+  geom_polygon(colour = "black", aes(fill = average_colonies_lost,
+                                     label = average_colonies_lost,
+                                     label2 = state)) +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
   theme_void() +
   scale_fill_viridis_c(direction = -1) +
   facet_wrap(~year) +
   labs(fill = "Average Colonies Lost (%)")
+
+ggplotly(mapplot, tooltip = c("label", "label2"))
 ```
 
 **Visual Takeaways:** There appears to be an overall trend of improvement when it comes to average bee colonies lost, particularly across the eastern United States. The one state that doesn't follow this general trend is Alabama where its average percent of colonies lost went from around 15% in 2015 to over 20% in 2020. On the other hand, the top five states from the first plot above (California, Florida, North Dakota, Texas, and Georgia) all saw a decrease in average bee colonies lost between 2015 and 2020.
