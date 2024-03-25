@@ -1,7 +1,7 @@
 ---
 title: "Data Visualization Blog - Brody Pinto"
 author: "Brody Pinto"
-date: "2024-03-08"
+date: "2024-02-08"
 categories: [news]
 image: "storytelling-data-visualizations-header.webp"
 ---

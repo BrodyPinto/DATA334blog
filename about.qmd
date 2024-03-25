@@ -12,7 +12,7 @@ about:
       href: https://linkedin.com/in/brodypinto/
     - icon: github
       text: Github
-      href: https://github.com/BrodyPinto/DATA334blog
+      href: https://github.com/BrodyPinto
 
 ---
 
