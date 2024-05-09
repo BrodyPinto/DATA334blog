@@ -45,7 +45,7 @@ options(scipen = 100)
 
 theme_set(theme_minimal())
 
-salary <- read.csv("data/v7_Latest_Data_Science_Salaries.csv", stringsAsFactors = TRUE) |>
+salary <- utils::read.csv(here::here("data/v7_Latest_Data_Science_Salaries.csv"), stringsAsFactors = TRUE) |>
   filter(!is.na(Salary.in.USD))
 
 salary = salary |>
